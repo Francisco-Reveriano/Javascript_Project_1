@@ -46,6 +46,7 @@ function findProductById(id){
 
 /* Declare an empty array named cart to hold the items in the cart */
 let cart = []
+let totalPaid = 0;
 
 /* Create a function named addProductToCart that takes in the product productId as an argument
   - addProductToCart should get the correct product based on the productId
@@ -60,8 +61,8 @@ function addProductToCart(productId){
     product.quantity += 1;
   }
   else{
+    product.quantity += 1;
     cart.push(product);
-    product.quantity += 1; 
   }
 }
 
@@ -89,7 +90,7 @@ function decreaseQuantity(productId){
   const product = findProductById(productId);
   if (!product) return;
 
-  if (product.quantity > 1){
+  if (product.quantity > 0){
     product.quantity -= 1;
   }
   else{
@@ -130,16 +131,29 @@ function cartTotal(){
 /* Create a function called emptyCart that empties the products from the cart */
 function emptyCart(){
   cart = [];
+  totalPaid = 0;
 }
 
 /* Create a function named pay that takes in an amount as an argument
   - pay will return a negative number if there is a remaining balance
   - pay will return a positive number if money should be returned to customer
 */
-function pay(amount){
-  const price = cartTotal();
-  const difference = amount - price;
-  return Math.round(difference * 100) / 100;
+function pay(amount) {
+  const total = cartTotal();
+  if (cart.length === 0) return amount;
+  if (amount < total) {
+    // still owe money → return negative remaining balance
+    const remaining = total - amount;
+    return -remaining;
+  }
+  else if (amount > total) {
+    // overpaid → return positive change
+    const change = amount - total;
+    return change;
+  }
+  else {
+    return 0;
+  }
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
