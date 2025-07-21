@@ -138,7 +138,8 @@ function emptyCart(){
 */
 function pay(amount){
   const price = cartTotal();
-  return amount - price; 
+  const difference = amount - price;
+  return Math.round(difference * 100) / 100;
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
