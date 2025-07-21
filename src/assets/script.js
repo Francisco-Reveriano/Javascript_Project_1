@@ -1,4 +1,7 @@
-/* Create an array named products which you will use to add all of your product object literals that you create in the next step. */
+/**
+ * Array containing all available product objects for the store.
+ * @type {Array<{name: string, price: number, quantity: number, productId: number, image: string}>}
+ */
 let products = [];
 /* Create 3 or more product objects using object literal notation 
    Each product should include five properties
@@ -8,6 +11,10 @@ let products = [];
    - productId: unique id for the product (number)
    - image: picture of product (url string)
 */
+/**
+ * Product object representing a strawberry.
+ * @type {{name: string, price: number, quantity: number, productId: number, image: string}}
+ */
 const strawberry = {
   name: "strawberry",
   price: 0.25,
@@ -16,6 +23,10 @@ const strawberry = {
   image: "../images/strawberry.jpg",
 
 }
+/**
+ * Product object representing an orange.
+ * @type {{name: string, price: number, quantity: number, productId: number, image: string}}
+ */
 const orange = {
   name: "orange",
   price: 2,
@@ -24,15 +35,26 @@ const orange = {
   image: "../images/orange.jpg",
 }
 
+/**
+ * Product object representing a cherry.
+ * @type {{name: string, price: number, quantity: number, productId: number, image: string}}
+ */
 const cherry = {
   name: "cherry",
-  price: 0.30,
+  price: 0.5,
   quantity: 0,
   productId: 992,
   image: "../images/cherry.jpg",
 }
 
+// Add all product objects to the products array
 products = [strawberry, orange, cherry]
+
+/**
+ * Finds and returns a product object by its unique productId.
+ * @param {number} id - The unique productId of the product to find.
+ * @returns {object|undefined} The product object if found, otherwise undefined.
+ */
 function findProductById(id){
   return products.find(products => products.productId === id);
 }
@@ -44,15 +66,22 @@ function findProductById(id){
    - strawberry.jpg by Allec Gomes
 */
 
-/* Declare an empty array named cart to hold the items in the cart */
+/**
+ * Array holding the products currently in the user's cart.
+ * @type {Array<object>}
+ */
 let cart = []
+/**
+ * Tracks the total amount paid by the user (not used in current logic).
+ * @type {number}
+ */
 let totalPaid = 0;
 
-/* Create a function named addProductToCart that takes in the product productId as an argument
-  - addProductToCart should get the correct product based on the productId
-  - addProductToCart should then increase the product's quantity
-  - if the product is not already in the cart, add it to the cart
-*/
+/**
+ * Adds a product to the cart by productId. Increases quantity if already in cart.
+ * @param {number} productId - The unique productId of the product to add.
+ * @returns {void}
+ */
 function addProductToCart(productId){
   const product = findProductById(productId);
   if (!product) return;
@@ -66,60 +95,61 @@ function addProductToCart(productId){
   }
 }
 
-/* Create a function named increaseQuantity that takes in the productId as an argument
-  - increaseQuantity should get the correct product based on the productId
-  - increaseQuantity should then increase the product's quantity
-*/
+/**
+ * Increases the quantity of a product in the cart by productId.
+ * @param {number} productId - The unique productId of the product to increase.
+ * @returns {void}
+ */
 function increaseQuantity(productId){
   const product = findProductById(productId);
   if (cart.includes(product)){
     product.quantity += 1;
   }
   else{
-    cart.push(add_product);
+    cart.push(product);
     product.quantity += 1;
   }
 }
 
-/* Create a function named decreaseQuantity that takes in the productId as an argument
-  - decreaseQuantity should get the correct product based on the productId
-  - decreaseQuantity should decrease the quantity of the product
-  - if the function decreases the quantity to 0, the product is removed from the cart
-*/
+/**
+ * Decreases the quantity of a product in the cart by productId. Removes from cart if quantity reaches zero.
+ * @param {number} productId - The unique productId of the product to decrease.
+ * @returns {void}
+ */
 function decreaseQuantity(productId){
   const product = findProductById(productId);
   if (!product) return;
 
   if (product.quantity > 0){
     product.quantity -= 1;
-  }
-  else{
-    product.quantity = 0;
-    const idx = cart.indexOf(product);
-    if (idx > -1){
-      cart.splice(idx, 1);
+    if (product.quantity === 0) {
+      const idx = cart.indexOf(product);
+      if (idx > -1){
+        cart.splice(idx, 1);
+      }
     }
   }
 }
 
-/* Create a function named removeProductFromCart that takes in the productId as an argument
-  - removeProductFromCart should get the correct product based on the productId
-  - removeProductFromCart should update the product quantity to 0
-  - removeProductFromCart should remove the product from the cart
-*/
+/**
+ * Removes a product from the cart and sets its quantity to zero.
+ * @param {number} productId - The unique productId of the product to remove.
+ * @returns {void}
+ */
 function removeProductFromCart(productId){
   const product = findProductById(productId);
+  if (!product) return;
   product.quantity = 0;
-    const idx = cart.indexOf(product);
-    if (idx > -1){
-      cart.splice(idx, 1);
-    }
+  const idx = cart.indexOf(product);
+  if (idx > -1){
+    cart.splice(idx, 1);
+  }
 }
 
-/* Create a function named cartTotal that has no parameters
-  - cartTotal should iterate through the cart to get the total of all products
-  - cartTotal should return the sum of the products in the cart
-*/
+/**
+ * Calculates and returns the total cost of all products in the cart.
+ * @returns {number} The total price of all items in the cart.
+ */
 function cartTotal(){
   let total = 0;
   for (const item of cart){
@@ -128,16 +158,27 @@ function cartTotal(){
   return total;
 }
 
-/* Create a function called emptyCart that empties the products from the cart */
+/**
+ * Empties the cart and resets the totalPaid variable.
+ * @returns {void}
+ */
 function emptyCart(){
   cart = [];
   totalPaid = 0;
 }
 
-/* Create a function named pay that takes in an amount as an argument
-  - pay will return a negative number if there is a remaining balance
-  - pay will return a positive number if money should be returned to customer
-*/
+/**
+ * Processes a payment for the current cart and determines the balance or change due.
+ *
+ * @param {number} amount - The amount of money provided by the customer for payment.
+ * @returns {number} Returns:
+ *   - A negative number if the payment is insufficient (the negative value is the remaining balance owed).
+ *   - A positive number if the payment exceeds the cart total (the value is the change to return to the customer).
+ *   - Zero if the payment exactly matches the cart total.
+ *   - If the cart is empty, returns the amount provided (no payment processed).
+ *
+ * The function does not modify the cart or the amount paid; it only calculates the result based on the current cart total.
+ */
 function pay(amount) {
   const total = cartTotal();
   if (cart.length === 0) return amount;
