@@ -180,21 +180,20 @@ function emptyCart(){
  * The function does not modify the cart or the amount paid; it only calculates the result based on the current cart total.
  */
 function pay(amount) {
-  const total = cartTotal();
-  if (cart.length === 0) return amount;
-  if (amount < total) {
-    // still owe money → return negative remaining balance
-    const remaining = total - amount;
-    return -remaining;
+  // Add the received amount to the total paid so far
+  totalPaid += amount;
+
+  // Calculate how much the customer still owes (negative = still owed) 
+  // or how much change to give (positive = change due)
+  const remaining = totalPaid - cartTotal();
+
+  // If the cart is fully paid or overpaid, reset totalPaid for the next transaction
+  if (remaining >= 0) {
+    totalPaid = 0;
   }
-  else if (amount > total) {
-    // overpaid → return positive change
-    const change = amount - total;
-    return change;
-  }
-  else {
-    return 0;
-  }
+
+  // Return the remaining balance
+  return remaining;
 }
 
 /* Place stand out suggestions here (stand out suggestions can be found at the bottom of the project rubric.)*/
