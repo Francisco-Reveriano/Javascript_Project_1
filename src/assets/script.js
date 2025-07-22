@@ -20,7 +20,7 @@ const strawberry = {
   price: 0.25,
   quantity: 0,
   productId: 990,
-  image: "../images/strawberry.jpg",
+  image: "./images/strawberry.jpg",
 
 }
 /**
@@ -32,7 +32,7 @@ const orange = {
   price: 2,
   quantity: 0,
   productId: 991,
-  image: "../images/orange.jpg",
+  image: "./images/orange.jpg",
 }
 
 /**
@@ -44,7 +44,7 @@ const cherry = {
   price: 0.5,
   quantity: 0,
   productId: 992,
-  image: "../images/cherry.jpg",
+  image: "./images/cherry.jpg",
 }
 
 // Add all product objects to the products array
@@ -187,12 +187,13 @@ function pay(amount) {
   // or how much change to give (positive = change due)
   const remaining = totalPaid - cartTotal();
 
-  // If the cart is fully paid or overpaid, reset totalPaid for the next transaction
+  // If the cart is fully paid or overpaid, reset totalPaid and empty the cart
   if (remaining >= 0) {
     totalPaid = 0;
+    emptyCart();
   }
 
-  // Return the remaining balance
+  // Return the remaining balance (negative = owed, positive = change)
   return remaining;
 }
 
